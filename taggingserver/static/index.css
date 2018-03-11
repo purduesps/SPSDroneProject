@@ -1,0 +1,101 @@
+.can{
+        position:absolute;
+        top:1%;
+        left:1%;
+        border:1px solid;
+        background-image: url("frame.jpg");
+}
+.green{
+        position:absolute;
+        top:15%;
+        left:45%;
+        width:10px;
+        height:10px;
+        background:green;
+}
+.red{
+        position:absolute;
+        top:15%;
+        left:47%;
+        width:10px;
+        height:10px;
+        background:red;
+}
+.blue{
+        position:absolute;
+        top:15%;
+        left:46%;
+        width:10px;
+        height:10px;
+        background:blue;
+}
+.yellow{
+        position:absolute;
+        top:17%;
+        left:45%;
+        width:10px;
+        height:10px;
+        background:yellow;
+}
+.orange{
+        position:absolute;
+        top:17%;
+        left:46%;
+        width:10px;
+        height:10px;
+        background:orange;       
+}
+.black{
+        position:absolute;
+        top:17%;
+        left:47%;
+        width:10px;
+        height:10px;
+        background:black;       
+}
+.white{
+        position:absolute;
+        top:22%;
+        left:45%;
+        width:15px;
+        height:15px;
+        background:white;
+        border:2px solid;
+}
+.btn{
+        position:absolute;
+        top:90%;
+        left:10%;       
+}
+.clr{
+        position:absolute;
+        top:90%;
+        left:20%;
+}
+.delLast{
+        position:absolute;
+        top:90%;
+        left:30%;
+}
+.canvasimg{
+        position:absolute;
+        top:10%;
+        left:52%;
+        display:none;
+}
+.era{
+        position:absolute;
+        top:20%;
+        left:43%;
+}
+.choose{
+        position:absolute;
+        top:12%;
+        left:43%;
+}
+#doc3 {
+        margin: auto 10px;
+        width: auto;
+        height: 2000px;
+        background-color: yellow;
+}
