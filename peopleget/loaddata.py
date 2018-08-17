@@ -11,7 +11,7 @@ class mymodel(object):
         print(self.parameter)
         print(self.parameter2)
 
-    def propagate(self, peopledata,nsteps):
+    def propagate(self, startstep, peopledata,nsteps):
         pass
 
 
