@@ -1,11 +1,12 @@
+from scipy.spatial import distance
 from peopleget.peopledata import PersonData, PeopleData, getdeopledata
 from math import pow, cos, atan2, sin
 import numpy as np
+import timeit
 import sys
 from enum import Enum
 sys.path.insert(0, "peopleget")
-from pickle import load
-from scipy.spatial import distance
+
 
 class Boundries(Enum):
     MINY = 1
@@ -21,7 +22,7 @@ class SimpleRules(object):
                  m_i=1,
                  d_max=1,
                  dt=0.05,
-                 vi0 = 1,
+                 vi0=1,
                  obstspace=None
                  ):
        
@@ -32,7 +33,7 @@ class SimpleRules(object):
         self.d_max = d_max
         self.obstSpace = obstspace  # This is a field size array of booleans that define obstacles
         self.angcheck = 100
-        self.vi0 =vi0
+        self.vi0 = vi0
 
     def print_parameters(self):
         print("dT: ", self.dt)
@@ -40,7 +41,29 @@ class SimpleRules(object):
         print("Phi: ", self.phi)
         print("D max: ", self.d_max)
 
+    def spaceToHit(self, space, angle, actpos):
+        hitpoints = []
+        for x in range(space.shape[0]):
+            for y in range(space.shape[1]):
+                if space[x, y]:
+                    newx = x - actpos[0]
+                    newy = y - actpos[1]
+                    newx = newx*cos(angle) - newy*sin(angle)
+                    newy = newx*sin(angle) + newy*cos(angle)
+                    hitpoints.append((newx, newy))
+        return hitpoints
+
     def Fa(self, angles, pos, obsSpace):
+        fas = []
+        for angle in angles:
+            obst = self.spaceToHit(obsSpace, angle, pos)
+            hits = [obs for obs in obst if abs(obs[1]) < self.r_i]
+            neardist = hits[0][0]
+            for obs in hits:
+                if obs[0] < neardist:
+                    neardist = obs[0]
+            fas.append(neardist)
+
         return angles
 
     def Vdes(self, v0, dh):
@@ -105,6 +128,7 @@ class SimpleRules(object):
         '''
         for n in range(nsteps):
 
+            tStamp = timeit.default_timer()
             dests = [self.getDest(term, self.obstSpace.shape) for term in zip(people, termBoundries)]
             desorientations = [atan2(dest[1]-pos[1], dest[0]-dest[0]) for pos, dest in zip(people, dests)]
             fullObsSpace = np.full((640, 480), False, dtype=bool)
@@ -127,10 +151,12 @@ class SimpleRules(object):
             v_des = [min(self.vi0, dh/self.t) for dh in d_h]
             people = [(p[0]+cos(alpha)*v*self.t, p[1]+sin(alpha)*v*self.t) for p, alpha, v in zip(people, alpha_des,v_des)]
             orientations = alpha_des
-        return [(p[0], p[1], v*cos(o), v*sin(o)) for p, v, o in zip(people, v_des,orientations)]
+            print("One Step took: {} Minutes".format((timeit.default_timer()-tStamp)/60.0))
+        return [(p[0], p[1], v*cos(o), v*sin(o)) for p, v, o in zip(people, v_des, orientations)]
 
 if __name__ == "__main__":
     p = getdeopledata("picklefile")
+    print(p)
     m = SimpleRules(m_i=360*20, obstspace=np.full((640, 480), False, dtype=bool))
     m.print_parameters()
     print(m.propagate(0, p, 10))
