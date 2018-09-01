@@ -60,7 +60,7 @@ class SimpleRules(object):
             hits = [obs for obs in obst if abs(obs[1]) < self.r_i]
             neardist = hits[0][0]
             for obs in hits:
-                if obs[0] < neardist:
+                if 0 < obs[0] < neardist:
                     neardist = obs[0]
             fas.append(neardist)
 
