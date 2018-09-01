@@ -32,7 +32,7 @@ class PersonData(object):
                  xvelocities=np.zeros(1000, dtype=float),
                  yvelocities =np.zeros(1000, dtype=float)):
         self.ID = IDnum
-        if len(set([len(ypositions), len(xpositions), len(yvelocities), len(xvelocities)])) != 1:
+        if ~(len(ypositions) == len(xpositions) == len(yvelocities) == len(xvelocities)):
             raise ValueError("ALL STATE LISTS MUST BE THE SAME LENGTH")
 
         self.numdata = len(ypositions)

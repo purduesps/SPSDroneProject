@@ -41,22 +41,12 @@ class SimpleRules(object):
         print("Phi: ", self.phi)
         print("D max: ", self.d_max)
 
-    # def spaceToHit(self, space, angle, actpos):
-    #     coords = np.array(np.where(space)).T - actpos
-    #
-    #     rot_mat = np.array([[cos(angle), -sin(angle)], [sin(angle), cos(angle)]])
-    #     hitpoints = np.matmul(rot_mat, coords.T).T
-    #
-    #     return hitpoints
-
     def Fa(self, angles, pos, obsSpace):
         fas = []
         coords = (np.array(np.where(obsSpace)).T - pos).T
         c, s = np.cos(angles), np.sin(angles)
         rots = np.array([[c, -s], [s, c]]).transpose((2, 0, 1))
         for rot_mat in rots:
-            # rot_mat = np.array([[cos(angle), -sin(angle)], [sin(angle), cos(angle)]])
-            # obst = self.spaceToHit(obsSpace, angle, pos)
             obst = np.matmul(rot_mat, coords)
             hits = obst[0, ((np.abs(obst[1]) < self.r_i) & (obst[0] > 0))]
 
@@ -67,7 +57,6 @@ class SimpleRules(object):
 
     def Da(self, alpha, alpha_0, fa):
         return self.d_max**2 + fa**2 - 2*self.d_max*fa*np.cos(alpha_0 - alpha)
-        # return [self.d_max**2 + fa_i**2 - 2*self.d_max*fa_i*cos(alpha_0-alph) for alph, fa_i in zip(alpha, fa)]
 
     # If the disappear, their destination is where they disappeared.
     # If they walked off an edge, their dest is closest to edge
@@ -156,12 +145,11 @@ class SimpleRules(object):
             d_h = np.array(d_h)
 
             tsi = timeit.default_timer()
-            v_des = np.minimum(d_h/self.dt, self.vi0)
+            v_des = np.minimum(d_h/self.t, self.vi0)
             v_des_v = v_des * np.array([np.cos(alpha_des), np.sin(alpha_des)])
 
             people = people + v_des_v.T * self.dt
             orientations = alpha_des
-            self.t += self.dt
             print('the rest: {} s'.format(timeit.default_timer() - tsi))
             print("One Step took: {} s".format((timeit.default_timer()-tStamp)))
         return [(p[0], p[1], v*cos(o), v*sin(o)) for p, v, o in zip(people, v_des, orientations)]
