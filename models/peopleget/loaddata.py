@@ -1,5 +1,5 @@
 from pickle import load
-from peopledata import PersonData, PeopleData, getdeopledata
+from peopledata import PersonData, PeopleData, getdeopledata,savepeopledata
 
 
 class mymodel(object):
@@ -17,10 +17,6 @@ class mymodel(object):
 
 
 if __name__ == "__main__":
-    p = getdeopledata("picklefile")
-    m = mymodel(param=5)
-    m2 = mymodel(param=6)
-    m.print_parameters()
-    m2.print_parameters()
-    data_at_3step = p.stateS(3)
-    print(data_at_3step)
+    p = PeopleData()
+    p.load("trajectories2.json")
+    savepeopledata("peopledata2.pkl",p)

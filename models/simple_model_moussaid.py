@@ -1,5 +1,5 @@
 from scipy.spatial import distance
-from models.peopleget.peopledata import PersonData, PeopleData, getdeopledata
+from peopleget.peopledata import PersonData, PeopleData, getdeopledata
 from math import pow, cos, atan2, sin
 import numpy as np
 import timeit
@@ -23,7 +23,7 @@ class SimpleRules(object):
                  d_max=1,
                  dt=0.05,
                  vi0=1,
-                 obstspace=None
+                 obstspace=np.zeros((2000,2000))
                  ):
        
         self.dt = dt
@@ -115,7 +115,8 @@ class SimpleRules(object):
         for n in range(nsteps):
             tStamp = timeit.default_timer()
             dests = [self.getDest(term, self.obstSpace.shape) for term in zip(people, termBoundries)]
-            desorientations = [atan2(dest[1]-pos[1], dest[0]-dest[0]) for pos, dest in zip(people, dests)]
+            print(people[0],dests[0])
+            desorientations = [atan2(dest[1]-pos[1], dest[0]-pos[0]) for pos, dest in zip(people, dests)]
 
             fullObsSpace = np.full((640, 480), False, dtype=bool)
             yc, xc = np.ogrid[:640, :480]
@@ -155,8 +156,8 @@ class SimpleRules(object):
         return [(p[0], p[1], v*cos(o), v*sin(o)) for p, v, o in zip(people, v_des, orientations)]
 
 if __name__ == "__main__":
-    p = getdeopledata("picklefile")
+    p = getdeopledata("peopledata2.pkl")
     print(p)
     m = SimpleRules(m_i=360*20, obstspace=np.full((640, 480), False, dtype=bool))
     m.print_parameters()
-    print(m.propagate(0, p, 10))
+    print(m.propagate(511, p, 5))
